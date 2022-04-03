@@ -14,9 +14,11 @@ LEFT JOIN producto ON detalle_compra.producto_id = producto.id
 WHERE cliente.nombre = 'usuario01'
 AND producto.descripcion = 'producto9'
 AND detalle_compra.cantidad = 5
-AND compra.fecha = CURRENT_DATE;  
+AND compra.fecha = CURRENT_DATE;
+COMMIT;  
 --Revisar stock produco9
 SELECT * FROM producto WHERE descripcion = 'producto9';
+COMMIT;
 --Insertar compra
 BEGIN;
 INSERT INTO compra (cliente_id, fecha) SELECT id, CURRENT_DATE FROM cliente WHERE nombre = 'usuario01';
@@ -34,10 +36,16 @@ WHERE cliente.nombre = 'usuario01'
 AND producto.descripcion = 'producto9'
 AND detalle_compra.cantidad = 5
 AND compra.fecha = CURRENT_DATE;
-
+COMMIT;
 
 ----------Punto 3-------------
 --Insertar la compra de los 3 articulos
+SELECT cliente.nombre, cliente.email, compra.fecha, detalle_compra.cantidad, producto.descripcion, producto.stock, producto.precio 
+FROM cliente LEFT JOIN compra ON cliente.id = compra.cliente_id LEFT JOIN detalle_compra ON compra_id = detalle_compra.compra_id 
+LEFT JOIN producto ON detalle_compra.producto_id =producto.id WHERE cliente.nombre = 'usuario02' 
+AND producto.descripcion in ('producto1', 'producto2', 'producto8') AND detalle_compra.cantidad = 3 AND compra.fecha = CURRENT_DATE; 
+COMMIT;	
+
 BEGIN;
 SAVEPOINT  producto1;
 INSERT INTO compra (cliente_id, fecha) SELECT id, CURRENT_DATE FROM cliente WHERE nombre = 'usuario02';
@@ -61,6 +69,11 @@ UPDATE producto SET stock = stock - 3 WHERE id = (SELECT id FROM producto WHERE 
 
 COMMIT;
 
+SELECT cliente.nombre, cliente.email, compra.fecha, detalle_compra.cantidad, producto.descripcion, producto.stock, producto.precio 
+FROM cliente LEFT JOIN compra ON cliente.id = compra.cliente_id LEFT JOIN detalle_compra ON compra_id = detalle_compra.compra_id 
+LEFT JOIN producto ON detalle_compra.producto_id =producto.id WHERE cliente.nombre = 'usuario02' 
+AND producto.descripcion in ('producto1', 'producto2', 'producto8') AND detalle_compra.cantidad = 3 AND compra.fecha = CURRENT_DATE; 
+COMMIT;
 --Punto 4--
 --a--
 \set AUTOCOMMIT off
